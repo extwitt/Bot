@@ -131,74 +131,6 @@ def get_text_messages(message):
         elif ms_text == "Придумать ник":
             bot.send_message(chat_id, text=get_nickname())
 
-        elif ms_text == "Начать игру":
-            koloda = [6, 7, 8, 9, 10, 2, 3, 4, 11] * 4
-            random.shuffle(koloda)
-            count = 0
-            countd = 0
-            a = 0
-
-            while True:
-                choice = inputBot(message, text='Будете брать карту?')
-                if choice == 'Давай попробуем':
-                    current = koloda.pop()
-                    bot.send_message(chat_id, 'Вам попалась карта достоинством %d' % current)
-                    count += current
-                    random.shuffle(koloda)
-                    a = a + 1
-                    if count > 21:
-                        bot.send_message(chat_id, 'Извините, но вы проиграли > 21')
-                        goto_menu(chat_id, "Главное меню")
-                        break
-                    elif count == 21:
-                        bot.send_message(chat_id, 'Поздравляю, У вас БлэДжек')
-                        goto_menu(chat_id, "Главное меню")
-                        break
-                    else:
-                        bot.send_message(chat_id, 'У вас %d очков.' % count)
-                    if a == 1:
-                        random.shuffle(koloda)
-                        currend = koloda.pop()
-                    bot.send_message(chat_id, 'Карта Диллера %d' % currend)
-                    bot.send_message(chat_id, 'У Диллера %d очков.' % currend)
-                elif choice == 'Пожалуй Нет':
-                    if a > 1:
-                        countd += currend
-                        while True:
-                            if countd < count:
-                                random.shuffle(koloda)
-                                currend = koloda.pop()
-                                countd += currend
-                            else:
-                                break
-                        bot.send_message(chat_id, 'У вас %d очков.' % count)
-                        bot.send_message(chat_id, 'У Диллера %d очков.' % countd)
-                        if countd > count:
-                            if countd > 21:
-                                bot.send_message(chat_id, "У Диллера очков > 21, Вы победилт)")
-                                goto_menu(chat_id, "Главное меню")
-                                break
-                            bot.send_message(chat_id, "У Диллера больше очков, Вы проиграли(")
-                            goto_menu(chat_id, "Главное меню")
-                        elif count > countd:
-                            bot.send_message(chat_id, "У Вас больше очков, Вы победили)")
-                            goto_menu(chat_id, "Главное меню")
-                        elif count == count:
-                            bot.send_message(chat_id, "Ничья")
-                            goto_menu(chat_id, "Главное меню")
-                        break
-
-                    else:
-                        goto_menu(chat_id, "Главное меню")
-                        break
-                elif  choice == 'Начать игру' or "<--Нажимай" or "Нажимай-->":
-                    bot.send_message(chat_id, "Сейчас эти кнопки не пригодятся(да-да, Автор очень ленивый)")
-
-                else:
-                    bot.send_message(chat_id, "не верное значение")
-                    goto_menu(chat_id, "Главное меню")
-                    break
-
         elif ms_text == 'Пожалуй Нет':
             goto_menu(chat_id, "Главное меню")
 
@@ -294,6 +226,73 @@ def get_text_messages(message):
             DZ.dz92(bot, chat_id)
         elif ms_text == "Задание 10" :
             DZ.dz10(bot, chat_id)
+
+        elif ms_text == "Начать игру":
+            koloda = [6, 7, 8, 9, 10, 2, 3, 4, 11] * 4
+            random.shuffle(koloda)
+            count = 0
+            countd = 0
+            a = 0
+
+            while True:
+                choice = inputBot(message, text='Будете брать карту?')
+                if choice == 'Давай попробуем':
+                    current = koloda.pop()
+                    bot.send_message(chat_id, 'Вам попалась карта достоинством %d' % current)
+                    count += current
+                    random.shuffle(koloda)
+                    a = a + 1
+                    if count > 21:
+                        bot.send_message(chat_id, 'Извините, но вы проиграли > 21')
+                        goto_menu(chat_id, "Главное меню")
+                        break
+                    elif count == 21:
+                        bot.send_message(chat_id, 'Поздравляю, У вас БлэДжек')
+                        goto_menu(chat_id, "Главное меню")
+                        break
+                    else:
+                        bot.send_message(chat_id, 'У вас %d очков.' % count)
+                    if a == 1:
+                        random.shuffle(koloda)
+                        currend = koloda.pop()
+                    bot.send_message(chat_id, 'Карта Диллера %d' % currend)
+                elif choice == 'Пожалуй Нет':
+                    if a > 1:
+                        countd += currend
+                        while True:
+                            if countd < count:
+                                random.shuffle(koloda)
+                                currend = koloda.pop()
+                                countd += currend
+                            else:
+                                break
+                        bot.send_message(chat_id, 'У вас %d очков.' % count)
+                        bot.send_message(chat_id, 'У Диллера %d очков.' % countd)
+                        if countd > count:
+                            if countd > 21:
+                                bot.send_message(chat_id, "У Диллера очков > 21, Вы победилт)")
+                                goto_menu(chat_id, "Главное меню")
+                                break
+                            bot.send_message(chat_id, "У Диллера больше очков, Вы проиграли(")
+                            goto_menu(chat_id, "Главное меню")
+                        elif count > countd:
+                            bot.send_message(chat_id, "У Вас больше очков, Вы победили)")
+                            goto_menu(chat_id, "Главное меню")
+                        elif count == count:
+                            bot.send_message(chat_id, "Ничья")
+                            goto_menu(chat_id, "Главное меню")
+                        break
+
+                    else:
+                        goto_menu(chat_id, "Главное меню")
+                        break
+                elif  choice == 'Начать игру' or "<--Нажимай" or "Нажимай-->":
+                    bot.send_message(chat_id, "Сейчас эти кнопки не пригодятся(да-да, Автор очень ленивый)")
+
+                else:
+                    bot.send_message(chat_id, "не верное значение")
+                    goto_menu(chat_id, "Главное меню")
+                    break
 
     else:
         bot.send_message(chat_id, text="Мне жаль, я не понимаю вашу команду:" + ms_text)
