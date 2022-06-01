@@ -9,11 +9,10 @@ import bs4
 import random
 from time import sleep
 
-import BotGames
 from menuBot import Menu, Users
 import DZ
 
-bot = telebot.TeleBot('5191652585:AAFgiV9xp8-bkRIXikmXrdnMKXygMOWcagI')
+bot = telebot.TeleBot('5250127657:AAHt1NuvGHkdcm3jmxLioOLwyK4FDIHaUXY')
 game21 = None
 
 def inputBot(message, text):
@@ -125,82 +124,20 @@ def get_text_messages(message):
     if cur_menu != None and ms_text in cur_menu.buttons:
         cur_user.set_cur_menu(ms_text)
 
-        if ms_text == "📚 Помощь":
+        if ms_text == "Помощь":
             send_help(chat_id)
 
-        elif ms_text == "Придумать ник":
-            bot.send_message(chat_id, text=get_nickname())
-
-        elif ms_text == 'Пожалуй Нет':
-            goto_menu(chat_id, "Главное меню")
-
-        elif ms_text == "<--Нажимай":
-            bot.send_message(chat_id, "Да не суда Криворукий")
-
-        elif ms_text == "Нажимай-->":
-            bot.send_message(chat_id, "Да не суда Криворукий")
-
-        elif ms_text == 'Давай попробуем':
-            bot.send_message(chat_id, "Для этого нужно начать игру")
-
-        elif ms_text == "🐶 Прислать собаку":
+        elif ms_text == "Прислать собаку":
             bot.send_photo(chat_id, photo=get_dogURL(), caption="Вот тебе собачка")
 
-        elif ms_text == "😅 Прислать анекдот":
+        elif ms_text == "Прислать лису":
+            bot.send_photo(chat_id, photo=get_Cat())
+
+        elif ms_text == "Прислать анекдот":
             bot.send_message(chat_id, text=get_anekdot())
 
-        elif ms_text == "🎬 Прислать фильм":
+        elif ms_text == "Прислать фильм":
             send_film(chat_id)
-
-        elif ms_text == "🎮 Случайная игра":
-            bot.send_message(chat_id, text=get_game())
-
-        elif ms_text == "⌛ Рандомное Аниме!!!":
-            result_find_name, result_find_in, im = get_anime()
-            bot.send_message(chat_id, result_find_name)
-            bot.send_photo(chat_id, photo=(im[0]))
-            bot.send_message(chat_id, result_find_in)
-
-        elif ms_text == "Узнать погоду":
-            city = inputBot(message, text='Введите город')
-
-            r = requests.get(
-                'http://api.openweathermap.org/data/2.5/weather?&units=metric&q=%s&appid=0c9f3c052f1d81b7062750ff0926f345' % (
-                    city))
-            data = r.json()
-            temp = data["main"]["temp"]
-            bot.send_message(chat_id, text='Температура в ' + str(city) + ':' + str(temp) + '°C')
-
-
-
-        elif ms_text in BotGames.GameRPS.values :
-            bot.send_message(chat_id, text="Ждем противника...")
-            for _ in range(10) :
-                text_game = ""
-                for user in Users.activeUsers.values() :
-                    if cur_user.get_cur_enemy() :
-                        user = cur_user.get_cur_enemy()
-                    if user.id != cur_user.id and user.get_cur_menu() in BotGames.GameRPS.values :
-                        user.set_cur_enemy(cur_user)
-                        enemy_value = user.get_cur_menu()
-                        bot.send_message(chat_id, text="Твой Противник - @{enemy}".format(enemy=user.userName))
-                        gameRSP = BotGames.getGame(chat_id)
-                        if gameRSP == None :
-                            goto_menu(chat_id, "Выход")
-                            return
-                        text_game = gameRSP.onlineRPS(ms_text, enemy_value)
-                        bot.send_message(chat_id, text=text_game)
-                        gameRSP.newGame()
-                        break
-                if text_game :
-                    break
-                sleep(1)
-            if not text_game :
-                bot.send_message(chat_id, text="Противник не найден :С")
-            sleep(1)
-            cur_user.set_cur_menu("")
-            cur_user.set_cur_enemy("")
-
 
 
 
@@ -227,76 +164,11 @@ def get_text_messages(message):
         elif ms_text == "Задание 10" :
             DZ.dz10(bot, chat_id)
 
-        elif ms_text == "Начать игру":
-            koloda = [6, 7, 8, 9, 10, 2, 3, 4, 11] * 4
-            random.shuffle(koloda)
-            count = 0
-            countd = 0
-            a = 0
-
-            while True:
-                choice = inputBot(message, text='Будете брать карту?')
-                if choice == 'Давай попробуем':
-                    current = koloda.pop()
-                    bot.send_message(chat_id, 'Вам попалась карта достоинством %d' % current)
-                    count += current
-                    random.shuffle(koloda)
-                    a = a + 1
-                    if count > 21:
-                        bot.send_message(chat_id, 'Извините, но вы проиграли > 21')
-                        goto_menu(chat_id, "Главное меню")
-                        break
-                    elif count == 21:
-                        bot.send_message(chat_id, 'Поздравляю, У вас БлэДжек')
-                        goto_menu(chat_id, "Главное меню")
-                        break
-                    else:
-                        bot.send_message(chat_id, 'У вас %d очков.' % count)
-                    if a == 1:
-                        random.shuffle(koloda)
-                        currend = koloda.pop()
-                    bot.send_message(chat_id, 'Карта Диллера %d' % currend)
-                elif choice == 'Пожалуй Нет':
-                    if a > 1:
-                        countd += currend
-                        while True:
-                            if countd < count:
-                                random.shuffle(koloda)
-                                currend = koloda.pop()
-                                countd += currend
-                            else:
-                                break
-                        bot.send_message(chat_id, 'У вас %d очков.' % count)
-                        bot.send_message(chat_id, 'У Диллера %d очков.' % countd)
-                        if countd > count:
-                            if countd > 21:
-                                bot.send_message(chat_id, "У Диллера очков > 21, Вы победилт)")
-                                goto_menu(chat_id, "Главное меню")
-                                break
-                            bot.send_message(chat_id, "У Диллера больше очков, Вы проиграли(")
-                            goto_menu(chat_id, "Главное меню")
-                        elif count > countd:
-                            bot.send_message(chat_id, "У Вас больше очков, Вы победили)")
-                            goto_menu(chat_id, "Главное меню")
-                        elif count == count:
-                            bot.send_message(chat_id, "Ничья")
-                            goto_menu(chat_id, "Главное меню")
-                        break
-
-                    else:
-                        goto_menu(chat_id, "Главное меню")
-                        break
-                elif  choice == 'Начать игру' or "<--Нажимай" or "Нажимай-->":
-                    bot.send_message(chat_id, "Сейчас эти кнопки не пригодятся(да-да, Автор очень ленивый)")
-
-                else:
-                    bot.send_message(chat_id, "не верное значение")
-                    goto_menu(chat_id, "Главное меню")
-                    break
-
     else:
         bot.send_message(chat_id, text="Мне жаль, я не понимаю вашу команду:" + ms_text)
         goto_menu(chat_id, "Главное меню")
+
+
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -316,41 +188,22 @@ def goto_menu(chat_id, name_menu):
     if target_menu != None :
         bot.send_message(chat_id, text=target_menu.name, reply_markup=target_menu.markup)
 
-        if target_menu.name == "Игра в 21":
-            global game21
-            game21 = BotGames.newGame(chat_id, BotGames.Game21(jokers_enabled=True))
-            text_game = game21.get_cards(2)
-            bot.send_media_group(chat_id, media=getMediaCards(game21))
-            bot.send_message(chat_id, text=text_game)
-
-        elif target_menu.name == "Камень, ножницы, бумага":
-            gameRPS = BotGames.newGame(chat_id, BotGames.GameRPS())
-            text_game = "<b>Победитель определяется по следующим правилам: </b>\n" \
-                        "1. Камень > Ножницы\n" \
-                        "2. Бумага > Камень\n" \
-                        "3. Ножницы > Бумага"
-            bot.send_photo(chat_id, photo="https://media.istockphoto.com/photos/rock-paper-scissors-game-set-picture-id162675736", caption=text_game,
-                           parse_mode='HTML')
         return True
     else:
         return False
 
 
-def getMediaCards(game21):
-    medias = []
-    for url in game21.arr_cards_URL :
-        medias.append(types.InputMediaPhoto(url))
-    return medias
+
 
 
 def send_help(chat_id) :
     global bot
-    bot.send_message(chat_id, "Автор: Твой Отец")
+    bot.send_message(chat_id, "Автор: Ямолова Софья")
     markup = types.InlineKeyboardMarkup()
     btn1 = types.InlineKeyboardButton(text="Напишите автору",
-                                      url="https://t.me/ToxicLucFear")
+                                      url="https://t.me/ex_twitt")
     markup.add(btn1)
-    img = open("404.png", 'rb')
+    img = open("котейка.jpg", 'rb')
     bot.send_photo(chat_id, img, reply_markup=markup)
 
 
@@ -419,37 +272,16 @@ def get_dogURL():
         url = r_json["url"]
     return url
 
-def get_nickname():
-    array_names = []
-    req_names = requests.get("https://ru.nickfinder.com")
-    soup = bs4.BeautifulSoup(req_names.text, "html.parser")
-    result_find = soup.findAll(class_='one_generated_variant vt_df_bg')
-    for result in result_find :
-        array_names.append(result.getText())
-        return array_names[0]
 
-def get_game():
-    contents = requests.get('https://gamechart-app-default-rtdb.europe-west1.firebasedatabase.app/GameName.json').json()
-    b = []
-    for (k, v) in contents.items() :
-        b.append(k)
-    game = b[random.randint(0, len(b))]
-    return game
+def get_Cat():
+    url1 = ""
+    req1 = requests.get('https://randomfox.ca/floof/')
+    if req1.status_code == 200:
+        r_json1 = req1.json()
+        url1 = r_json1["link"]
+    return url1
 
-def get_anime():
-    req_anime = requests.get('https://manga-chan.me/manga/random')
-    soup = bs4.BeautifulSoup(req_anime.text, "html.parser")
-    result_find = soup.find("div", class_="content_row")
 
-    result_find_name = result_find.find("h2")
-
-    array_anime_in = []
-    result_find_in = result_find.find("div", class_="tags")
-
-    im = []
-    for img in result_find.findAll("img"):
-        im.append(img.get("src"))
-    return result_find_name, result_find_in, im
 
 bot.polling(none_stop=True, interval=0)
 
