@@ -139,6 +139,10 @@ def get_text_messages(message):
         elif ms_text == "Прислать фильм":
             send_film(chat_id)
 
+        elif ms_text == "мЭм":
+            im = get_lol()
+            bot.send_photo(chat_id, photo=im[0])
+
 
 
         elif ms_text == "Задание 1" :
@@ -280,6 +284,16 @@ def get_Cat():
         r_json1 = req1.json()
         url1 = r_json1["link"]
     return url1
+
+def get_lol():
+    req_anime = requests.get('https://www.anekdot.ru/random/mem/')
+    soup = bs4.BeautifulSoup(req_anime.text, "html.parser")
+    result_find = soup.find("div", class_="col-left col-left-margin")
+
+    im = []
+    for img in result_find.findAll("img"):
+        im.append(img.get("src"))
+    return im
 
 
 
