@@ -139,7 +139,7 @@ def get_text_messages(message):
         elif ms_text == "Прислать фильм":
             send_film(chat_id)
 
-        elif ms_text == "мЭм":
+        elif ms_text == "мЭЭм":
             im = get_lol()
             bot.send_photo(chat_id, photo=im[0])
 
